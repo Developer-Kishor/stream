@@ -66,6 +66,9 @@
         <center><h4>Follow us on Instagram!</h4></center>
     </footer>
 
+    <!-- Hidden download link -->
+    <a id="downloadLink" style="display: none;"></a>
+
     <script src="https://cdn.plyr.io/3.6.9/plyr.js"></script>
     <script>
         const controls = [
@@ -98,7 +101,17 @@
                 const videoSource = document.getElementById('videoSource');
                 videoSource.src = videoUrl;
                 
-                const player = Plyr.setup('.player', { controls });
+                const player = Plyr.setup('.player', {
+                    controls,
+                    listeners: {
+                        download: () => {
+                            const downloadLink = document.getElementById('downloadLink');
+                            downloadLink.href = videoUrl;
+                            downloadLink.setAttribute('download', alias + ".mp4");  // File name for download
+                            downloadLink.click();
+                        }
+                    }
+                });
                 
                 document.getElementById('videoPlayer').load();
             } else {
