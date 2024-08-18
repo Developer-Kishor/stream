@@ -44,6 +44,14 @@
             color: #e50914;
             text-decoration: none;
         }
+        #downloadBtn {
+            color: #fff;
+            background-color: #e50914;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -60,14 +68,15 @@
         </video>
     </div>
 
+    <div>
+        <span id="downloadBtn">Download Video</span>
+    </div>
+
     <footer>
         <center><h4>Video not playing? Possibly because your browser or the player doesn't support the codec. Please download and watch :D</h4></center>
         <center><h2><b><a href="https://www.instagram.com/kishorofficials/" target="_blank">@KishorOfficials</a></b></h2></center>
         <center><h4>Follow us on Instagram!</h4></center>
     </footer>
-
-    <!-- Hidden download link -->
-    <a id="downloadLink" style="display: none;"></a>
 
     <script src="https://cdn.plyr.io/3.6.9/plyr.js"></script>
     <script>
@@ -85,7 +94,6 @@
             'settings',
             'pip',
             'airplay',
-            'download',
             'fullscreen'
         ];
 
@@ -101,19 +109,20 @@
                 const videoSource = document.getElementById('videoSource');
                 videoSource.src = videoUrl;
                 
-                const player = Plyr.setup('.player', {
-                    controls,
-                    listeners: {
-                        download: () => {
-                            const downloadLink = document.getElementById('downloadLink');
-                            downloadLink.href = videoUrl;
-                            downloadLink.setAttribute('download', alias + ".mp4");  // File name for download
-                            downloadLink.click();
-                        }
-                    }
-                });
+                const player = Plyr.setup('.player', { controls });
                 
                 document.getElementById('videoPlayer').load();
+
+                // Set up download functionality
+                const downloadBtn = document.getElementById('downloadBtn');
+                downloadBtn.addEventListener('click', () => {
+                    const a = document.createElement('a');
+                    a.href = videoUrl;
+                    a.download = alias + ".mp4";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                });
             } else {
                 document.body.innerHTML = '<p>Error: Invalid URL or alias.</p>';
             }
